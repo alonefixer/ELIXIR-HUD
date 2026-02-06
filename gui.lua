@@ -1152,5 +1152,3 @@ end
 
 -- 🚀 СОЗДАНИЕ И ВОЗВРАТ ЭКЗЕМПЛЯРА
 local hub = ElixirHub.new()
-
-return hub
