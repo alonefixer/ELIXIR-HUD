@@ -59,7 +59,7 @@ ElixirHub.currentTab = "VISUALS"
 ElixirHub.tabButtons = {}
 ElixirHub.tabContents = {}
 ElixirHub.callbacks = {}
-ElixirHub.modules = {} -- Для хранения ваших функций и модулей
+ElixirHub.modules = {}
 
 -- 📦 ВНУТРЕННИЕ ПЕРЕМЕННЫЕ
 local ScreenGui
@@ -76,17 +76,21 @@ end
 
 -- 🚀 ИНИЦИАЛИЗАЦИЯ ГУИ
 function ElixirHub:initialize()
+    print("🔧 Initializing Elixir Hub...")
+    
     -- 🔧 Создаем главный GUI
     ScreenGui = Instance.new("ScreenGui")
     ScreenGui.Name = "ElixirHub"
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     ScreenGui.ResetOnSpawn = false
 
+    local player = game.Players.LocalPlayer
+    
     if syn and syn.protect_gui then
         syn.protect_gui(ScreenGui)
         ScreenGui.Parent = game:GetService("CoreGui")
     else
-        ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+        ScreenGui.Parent = player:WaitForChild("PlayerGui")
     end
 
     -- 🎯 ГЛАВНЫЙ КОНТЕЙНЕР
@@ -129,7 +133,7 @@ function ElixirHub:initialize()
     TopAccent.Position = UDim2.new(0, 0, 1, -2)
     TopAccent.Size = UDim2.new(1, 0, 0, 2)
 
-    -- Логотип (КРАСИВЫЙ ТЕКСТОВЫЙ) - ИЗМЕНЕНО
+    -- Логотип
     local Logo = Instance.new("TextLabel")
     Logo.Name = "Logo"
     Logo.BackgroundTransparency = 1
@@ -137,7 +141,7 @@ function ElixirHub:initialize()
     Logo.Size = UDim2.new(0, 40, 0, 40)
     Logo.AnchorPoint = Vector2.new(0, 0.5)
     Logo.Font = Enum.Font.GothamBlack
-    Logo.Text = "♦"  -- Бриллиант символ
+    Logo.Text = "♦"
     Logo.TextColor3 = self.COLORS.ACCENT
     Logo.TextSize = 32
 
@@ -163,7 +167,7 @@ function ElixirHub:initialize()
     Subtitle.TextSize = 12
     Subtitle.TextXAlignment = Enum.TextXAlignment.Left
 
-    -- Кнопка закрытия (КРАСИВЫЙ ТЕКСТОВЫЙ КРЕСТИК) - ИЗМЕНЕНО
+    -- Кнопка закрытия
     local CloseButton = Instance.new("TextButton")
     CloseButton.Name = "CloseButton"
     CloseButton.BackgroundColor3 = self.COLORS.DANGER
@@ -176,10 +180,9 @@ function ElixirHub:initialize()
     CloseButton.TextSize = 22
 
     local CloseCorner = Instance.new("UICorner")
-    CloseCorner.CornerRadius = UDim.new(0, 8)  -- Квадрат со скругленными углами
+    CloseCorner.CornerRadius = UDim.new(0, 8)
     CloseCorner.Parent = CloseButton
 
-    -- Обводка для крестика
     local CloseStroke = Instance.new("UIStroke")
     CloseStroke.Color = Color3.fromRGB(255, 255, 255)
     CloseStroke.Thickness = 1
@@ -270,6 +273,8 @@ function ElixirHub:initialize()
     
     -- Показываем стартовую вкладку
     self:switchTab("VISUALS")
+    
+    print("✅ Elixir Hub initialized successfully!")
 end
 
 -- 🏗️ ИНИЦИАЛИЗАЦИЯ ВКЛАДОК
@@ -463,7 +468,6 @@ function ElixirHub:createDefaultTabContents()
         container.BackgroundTransparency = 1
         container.Size = UDim2.new(1, 0, 1, 0)
         
-        -- КВАДРАТИК ДЛЯ НАЗВАНИЯ ВКЛАДКИ
         local titleBackground = Instance.new("Frame")
         titleBackground.Name = "TitleBackground"
         titleBackground.BackgroundColor3 = self.COLORS.TAB_TITLE
@@ -494,7 +498,6 @@ function ElixirHub:createDefaultTabContents()
         
         titleBackground.Parent = container
         
-        -- Инструкция для добавления своих функций
         local instruction = Instance.new("TextLabel")
         instruction.Text = "Add your visual functions here"
         instruction.TextColor3 = self.COLORS.TEXT_DARK
@@ -954,13 +957,13 @@ function ElixirHub:setCallback(eventName, callbackFunction)
     self.callbacks[eventName] = callbackFunction
 end
 
--- 📦 РЕГИСТРАЦИЯ МОДУЛЯ (ВАША ФУНКЦИЯ)
+-- 📦 РЕГИСТРАЦИЯ МОДУЛЯ
 function ElixirHub:registerModule(moduleName, moduleFunction)
     self.modules[moduleName] = moduleFunction
     print("✅ Module registered:", moduleName)
 end
 
--- 🎯 ВЫЗОВ ВАШЕЙ ФУНКЦИИ
+-- 🎯 ВЫЗОВ МОДУЛЯ
 function ElixirHub:executeModule(moduleName, ...)
     if self.modules[moduleName] then
         return self.modules[moduleName](...)
@@ -1051,6 +1054,7 @@ function ElixirHub:createToggle(name, defaultValue, callback)
     return toggle
 end
 
+-- 🔧 СОЗДАНИЕ СЛАЙДЕРА
 function ElixirHub:createSlider(name, minValue, maxValue, defaultValue, callback)
     local slider = Instance.new("Frame")
     slider.Name = name .. "Slider"
@@ -1137,7 +1141,7 @@ function ElixirHub:createSlider(name, minValue, maxValue, defaultValue, callback
         end
     end)
     
-    game:GetService("UserInputService").InputChanged:Connect(function(input)
+    UserInputService.InputChanged:Connect(function(input)
         if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
             local mousePos = input.Position.X
             local absolutePos = mousePos - track.AbsolutePosition.X
@@ -1150,5 +1154,47 @@ function ElixirHub:createSlider(name, minValue, maxValue, defaultValue, callback
     return slider
 end
 
--- 🚀 СОЗДАНИЕ И ВОЗВРАТ ЭКЗЕМПЛЯРА
+-- 🚀 ИНИЦИАЛИЗАЦИЯ ГУИ
 local hub = ElixirHub.new()
+
+print("✨ ELIXIR HUB loaded successfully!")
+print("📌 Press INSERT to show/hide GUI")
+print("📌 Press DELETE to destroy GUI")
+print("🎨 Available themes: Black, White, Purple")
+print("🔧 Ready to add your modules!")
+
+-- 🔧 ТУТ МОЖНО ДОБАВЛЯТЬ СВОИ МОДУЛИ
+
+-- 📋 ПРИМЕР МОДУЛЯ (РАСКОММЕНТИРУЙ ЕСЛИ НУЖНО):
+--[[
+do
+    local player = game:GetService("Players").LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+    
+    local speedEnabled = false
+    local originalWalkSpeed = humanoid.WalkSpeed
+    local customSpeed = 50
+    
+    local function updateSpeed()
+        if speedEnabled and humanoid then
+            humanoid.WalkSpeed = customSpeed
+        elseif humanoid then
+            humanoid.WalkSpeed = originalWalkSpeed
+        end
+    end
+    
+    hub:setTabContent("PLAYER", function()
+        local container = hub:createSlider("Speed", 16, 300, 50, function(value)
+            customSpeed = value
+            updateSpeed()
+        end)
+        
+        container.Parent = Instance.new("Frame")
+        return container
+    end)
+end
+--]]
+
+-- ВАЖНО: Вернуть hub для использования
+return hub
