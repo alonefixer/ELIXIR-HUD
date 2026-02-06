@@ -1153,10 +1153,4 @@ end
 -- 🚀 СОЗДАНИЕ И ВОЗВРАТ ЭКЗЕМПЛЯРА
 local hub = ElixirHub.new()
 
-print("✨ ELIXIR HUB loaded successfully!")
-print("📌 Press INSERT to show/hide GUI")
-print("📌 Press DELETE to destroy GUI")
-print("🎨 Available themes: Black, White, Purple")
-print("🔧 Modular system ready - add your own functions!")
-
 return hub
